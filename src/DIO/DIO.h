@@ -13,7 +13,7 @@
 #include "DIO_CFG.h"
 
 uint8 	DIO_u8Init 		(void);
-uint8	DIO_u8SetPinDir (uint8 U8PinNum , uint8 U8Dir);
+uint8	  DIO_u8SetPinDir (uint8 U8PinNum , uint8 U8Dir);
 uint8 	DIO_u8WritePin 	(uint8 U8PinNum , uint8 U8Data);
 uint8   DIO_u8ReadPin 	(uint8 U8PinNum);
 
