@@ -5,17 +5,45 @@
  *      Author: Ahmed Rashad
  */
 #include "TEST_LOCAL.h"
-#include "TEST_CFG.h"
 
+
+#include "../UART/UART.h"
 void TEST_DIO(void)
 {
-	if(DIO_u8Init())
-	{
-		DIO_u8SetPinDir(PORTA_0,OUTPUT);
-		DIO_u8WritePin (PORTA_0,HIGH);
-		DIO_u8SetPinDir(PORTA_1,INPUT_PULLUP);
-		DIO_u8SetPinDir(PORTA_2,OUTPUT);
-		while (1)
-		DIO_u8WritePin (PORTA_2,DIO_u8ReadPin(PORTA_1));
-	}
+	DIO_vidInit();
+	TIMER_vidInit();
+	Enable_Global_Interrupt();
+	LCD_vidInit();
+	SW_vidInit();
+	_Debug("ana hena");
+	_Debug("ana hena tany");
+//	while (0)
+//	{
+//		LCD_vidGotoXY(0,0);
+//		switch (SW_u8Read(1))
+//		{
+//
+//		case PrePushed:
+//			LCD_vidString("PRE-PUSH");
+//			break;
+//		case SWITCH_STATE_Error:
+//			LCD_vidString("ERROR   ");
+//			break;
+//		case PreReleased:
+//			LCD_vidString("PRE-REL ");
+//			break;
+//		case Released:
+//			LCD_vidString("RELEASED");
+//			break;
+//		case Pushed:
+//			LCD_vidString("PUSHED  ");
+//			break;
+//		}
+//	}
+}
+
+ISR(TIMER0_COMP_VECTOR_NUM)
+{
+	LCD_vidTask();
+	SW_vidTask();
 }

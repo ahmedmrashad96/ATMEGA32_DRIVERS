@@ -8,8 +8,13 @@ RM := rm -rf
 
 # All of the sources participating in the build are defined here
 -include sources.mk
+-include UART/subdir.mk
+-include TIMER/subdir.mk
 -include TEST/subdir.mk
+-include SWITCH/subdir.mk
+-include LCD/subdir.mk
 -include DIO/subdir.mk
+-include ADC/subdir.mk
 -include subdir.mk
 -include objects.mk
 
@@ -40,6 +45,9 @@ DRIVERS.hex \
 SIZEDUMMY += \
 sizedummy \
 
+AVRDUDEDUMMY += \
+avrdudedummy \
+
 
 # All Target
 all: DRIVERS.elf secondary-outputs
@@ -48,7 +56,7 @@ all: DRIVERS.elf secondary-outputs
 DRIVERS.elf: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: AVR C Linker'
-	avr-gcc -Wl,-Map,DRIVERS.map -mmcu=atmega16 -o "DRIVERS.elf" $(OBJS) $(USER_OBJS) $(LIBS)
+	avr-gcc -Wl,-Map,DRIVERS.map -mmcu=atmega32 -o "DRIVERS.elf" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 
@@ -66,16 +74,22 @@ DRIVERS.hex: DRIVERS.elf
 
 sizedummy: DRIVERS.elf
 	@echo 'Invoking: Print Size'
-	-avr-size --format=avr --mcu=atmega16 DRIVERS.elf
+	-avr-size --format=avr --mcu=atmega32 DRIVERS.elf
+	@echo 'Finished building: $@'
+	@echo ' '
+
+avrdudedummy: DRIVERS.elf
+	@echo 'Invoking: AVRDude'
+	C:\WinAVR-20100110\bin\avrdude -pm32 -cusbasp -Uflash:w:DRIVERS.hex:a
 	@echo 'Finished building: $@'
 	@echo ' '
 
 # Other Targets
 clean:
-	-$(RM) $(FLASH_IMAGE)$(ELFS)$(OBJS)$(ASM_DEPS)$(S_DEPS)$(SIZEDUMMY)$(S_UPPER_DEPS)$(LSS)$(C_DEPS) DRIVERS.elf
+	-$(RM) $(FLASH_IMAGE)$(ELFS)$(OBJS)$(ASM_DEPS)$(AVRDUDEDUMMY)$(S_DEPS)$(SIZEDUMMY)$(S_UPPER_DEPS)$(LSS)$(C_DEPS) DRIVERS.elf
 	-@echo ' '
 
-secondary-outputs: $(LSS) $(FLASH_IMAGE) $(SIZEDUMMY)
+secondary-outputs: $(LSS) $(FLASH_IMAGE) $(SIZEDUMMY) $(AVRDUDEDUMMY)
 
 .PHONY: all clean dependents
 .SECONDARY:

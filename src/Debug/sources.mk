@@ -12,6 +12,7 @@ FLASH_IMAGE :=
 ELFS := 
 OBJS := 
 ASM_DEPS := 
+AVRDUDEDUMMY := 
 S_DEPS := 
 SIZEDUMMY := 
 S_UPPER_DEPS := 
@@ -21,6 +22,11 @@ C_DEPS :=
 # Every subdirectory with source files must be described here
 SUBDIRS := \
 . \
+UART \
+TIMER \
 TEST \
+SWITCH \
+LCD \
 DIO \
+ADC \
 

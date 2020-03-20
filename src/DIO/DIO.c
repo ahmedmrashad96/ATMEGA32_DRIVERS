@@ -11,10 +11,10 @@
 
 #include "DIO_LOCAL.h"
 
-uint8 DIO_u8Init (void)
+void DIO_vidInit (void)
 {
 	//DIO Initialization function
-	return SUCCESS;
+
 }
 
 uint8 DIO_u8SetPinDir (uint8 u8PinNum , uint8 u8Dir)

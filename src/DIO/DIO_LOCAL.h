@@ -31,6 +31,6 @@
 #define DDRD	*((volatile uint8 *)(0x31))
 #define PIND	*((volatile uint8 *)(0x30))
 
- 
+
 
 #endif /* DIO_LOCAL_H_ */
