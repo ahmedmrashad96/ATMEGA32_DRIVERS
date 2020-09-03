@@ -16,7 +16,8 @@ uint8 UART_u8RecieveChar(void);
 uint8 UART_u8DataReady();
 uint8 UART_u8GetUdr();
 void UART_vidSendString(uint8 u8Data[], uint8 length);
-void _Debug(int8 u8Data[]);
 void UART_vidRecieveString(uint8 u8Data[], uint8* length);
+uint8 UART_vidSendStringConfirmed(uint8 * u8Data);
+
 
 #endif /* UART_H_ */

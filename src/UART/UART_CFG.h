@@ -9,6 +9,7 @@
 #define UART_CFG_H_
 
 
+
 #define	UART_PARITY_NON		0
 #define	UART_PARITY_EVEN		2
 #define	UART_PARITY_ODD		3

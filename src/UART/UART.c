@@ -63,19 +63,15 @@ void UART_vidSendString(uint8 u8Data[], uint8 length)
 		UART_vidSendChar(u8Data[i]);
 	}
 }
-void _Debug(int8 u8Data[])
+uint8 UART_vidSendStringConfirmed(uint8 * u8Data)
 {
-	uint8 i=0;
-	if(!UART_INIT)
+	uint8 f =1;
+	while(f&&*u8Data)
 	{
-		UART_vidInit();
+		UART_vidSendChar(*(u8Data));
+		f = (UART_u8RecieveChar()==*(u8Data++));
 	}
-	do
-	{
-		UART_vidSendChar(u8Data[i]);
-	}
-	while (u8Data[++i]);
-	UART_vidSendChar('\r');
+	return f;
 }
 
 void UART_vidRecieveString(uint8 u8Data[], uint8* length)
@@ -83,9 +79,9 @@ void UART_vidRecieveString(uint8 u8Data[], uint8* length)
 	*length=0;
 	do
 	{
-		u8Data[*length]=UART_u8RecieveChar();
-		(*length)++;
+		u8Data[(*length)++]=UART_u8RecieveChar();
 	}
-	while(u8Data[(*length)-1]);
+	while(u8Data[(*length)-1]&&u8Data[(*length)-1]!='\r');
+	u8Data[(*length)]=0;
 }
 
