@@ -8,11 +8,18 @@
 #ifndef TIMER_H_
 #define TIMER_H_
 
-#include "TIMER_CFG.h"
+
 
 void TIMER_vidInit();
 void _delay_ms(uint16 U16Time);
-void updatetime();
+uint32 updatetime();
 uint32 millis();
+void _wait(uint32 mils);
+void TIMER_vidSetCallback(void (*fun1)(void));
+
+uint8 TIMER_Get_us ();
+void TIMER_Reset ();
+
+#include "TIMER_CFG.h"
 
 #endif /* TIMER_H_ */

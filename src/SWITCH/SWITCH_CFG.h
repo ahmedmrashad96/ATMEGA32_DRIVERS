@@ -17,9 +17,22 @@ enum SWITCH_STATE{
 	SWITCH_STATE_Error
 };
 
-#define SENS_COUNT  3
-#define PBN_COUNT	3
 
+
+#define PULLUP		0
+#define PULLDOWN 	1
+
+
+
+
+
+#define SWITCH_CONNECTION	PULLDOWN
+#define SENS_COUNT  3
+#define PBN_COUNT	1
+
+#define PBN_0	PORTD_0
+#define PBN_1	PORTD_1
+#define PBN_2	PORTD_2
 
 
 #endif /* SWITCH_CFG_H_ */

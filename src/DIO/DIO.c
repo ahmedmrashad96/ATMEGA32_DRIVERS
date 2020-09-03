@@ -14,10 +14,25 @@
 void DIO_vidInit (void)
 {
 	//DIO Initialization function
+	if(INT0_SENSE < INTERRUPT_SENSE_OFF )
+	{
+		MCUCR_R &= ~(MCUCR_ISC0_M);
+		MCUCR_R |= ((INT0_SENSE<<MCUCR_ISC0_S)&(MCUCR_ISC0_M));
 
+	}
+	if(INT0_SENSE < INTERRUPT_SENSE_OFF )
+	{
+		MCUCR_R &= ~(MCUCR_ISC1_M);
+		MCUCR_R |= ((INT1_SENSE<<MCUCR_ISC1_S)&(MCUCR_ISC0_M));
+	}
+	if((INT1_SENSE < INTERRUPT_SENSE_OFF )&&(INT1_SENSE < INTERRUPT_SENSE_ANYCHANGE ))
+	{
+		Assign_Bit(MCUCSR_R,MCUCR_ISC2,Get_Bit(INT1_SENSE,0));
+
+	}
 }
 
-uint8 DIO_u8SetPinDir (uint8 u8PinNum , uint8 u8Dir)
+uint8 DIO_u8SetPinDir (uint8  u8PinNum , uint8 u8Dir)
 {
 	/*
 	 * Setting pin direction
@@ -36,6 +51,7 @@ uint8 DIO_u8SetPinDir (uint8 u8PinNum , uint8 u8Dir)
 		{
 		case PORT_A : //PORTA
 			// Write pin direction
+
 			Assign_Bit(DDRA ,u8PinNum % 8, Get_Bit(u8Dir,0) );
 			// Write pin pullup state
 			Assign_Bit(PORTA,u8PinNum % 8, Get_Bit(u8Dir,1) );
@@ -146,4 +162,104 @@ uint8 DIO_u8ReadPin (uint8 u8PinNum )
 		}
 	}
 	return u8Data;
+}
+
+void DIO_vidEnableInt(uint8 u8IntNum)
+{
+	switch (u8IntNum)
+	{
+	case 0:
+		Set_Bit(GICR,6);
+		break;
+	case 1:
+		Set_Bit(GICR,7);
+		break;
+	case 2:
+		Set_Bit(GICR,5);
+		break;
+	default:
+		break;
+	}
+
+}
+void DIO_vidDisableInt(uint8 u8IntNum)
+{
+	switch (u8IntNum)
+	{
+	case 0:
+		Clear_Bit(GICR,6);
+		break;
+	case 1:
+		Clear_Bit(GICR,7);
+		break;
+	case 2:
+		Clear_Bit(GICR,5);
+		break;
+	default:
+		break;
+	}
+
+}
+static void dummy (){}
+
+static void (*pfun_low[3])(void)= {dummy,dummy,dummy};
+static void (*pfun_rise[3])(void)= {dummy,dummy,dummy};
+static void (*pfun_fall[3])(void)= {dummy,dummy,dummy};
+static void (*pfun[3])(void)= {dummy,dummy,dummy};
+
+
+void DIO_vidSetCallback_Low(uint8 u8IntNum , void  (*fun)(void))
+{
+	pfun_low [u8IntNum] = fun;
+}
+void DIO_vidSetCallback_Rising(uint8 u8IntNum , void  (*fun)(void))
+{
+	pfun_rise [u8IntNum] = fun;
+}
+void DIO_vidSetCallback_Falling(uint8 u8IntNum , void  (*fun)(void))
+{
+	pfun_fall [u8IntNum] = fun;
+}
+void DIO_vidSetCallback_AnyChange(uint8 u8IntNum , void  (*fun)(void))
+{
+	pfun [u8IntNum] = fun;
+}
+ISR(INT0_VECTOR_NUM)
+{
+
+	pfun[0]();
+	if(Get_Bit(PIND,2))
+	{
+
+		pfun_rise[0]();
+	}
+	else
+	{
+
+		pfun_fall[0]();
+	}
+}
+ISR(INT1_VECTOR_NUM)
+{
+	pfun[1]();
+	if(Get_Bit(PIND,3))
+	{
+		pfun_rise[1]();
+	}
+	else
+	{
+		pfun_fall[1]();
+	}
+}
+ISR(INT2_VECTOR_NUM)
+{
+	pfun[2]();
+	if(Get_Bit(PINB,2))
+	{
+		pfun_rise[2]();
+	}
+	else
+	{
+		pfun_fall[2]();
+	}
 }

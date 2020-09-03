@@ -10,8 +10,8 @@
 
 #include "SWITCH_CFG.h"
 
+void SW_vidFlag (uint8 PBN_no,uint8 * u8PTRtoFlag);
 void SW_vidInit(void);
-uint8 SW_u8AddPBN (uint8 u8NewPBN);
 void SW_vidTask(void);
 uint8 SW_u8Read(uint8 u8i);
 

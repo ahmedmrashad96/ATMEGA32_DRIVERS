@@ -7,65 +7,70 @@
 
 #include "SWITCH_LOCAL.h"
 
-static	uint8 PBN[PBN_COUNT] = {};
+
+#ifdef SWITCH_CONNECTION
+#	if  SWITCH_CONNECTION == PULLDOWN
+#		define SWITCH_CON	INPUT
+#		define SWITCH_PUSH	HIGH
+#		define SWITCH_REL	LOW
+#	elif (SWITCH_CONNECTION == PULLUP)
+#		define SWITCH_CON	INPUT_PULLUP
+#		define SWITCH_PUSH	LOW
+#		define SWITCH_REL	HIGH
+#	endif
+#else
+#	error "SWITCH_CONNECTION not defined"
+#endif
+
+static	uint8 PBN[PBN_COUNT] = {PBN_0,PBN_1,PBN_2};
 static	uint8 PBN_state[PBN_COUNT] = {SWITCH_STATE_Error};
-static	uint8 u8Count=0;
 
+static uint8 * u8Ptr[PBN_COUNT];
 
+void SW_vidFlag (uint8 PBN_no,uint8 * u8PTRtoFlag)
+{
+	u8Ptr[PBN_no]=u8PTRtoFlag;
+}
 void SW_vidInit(void)
 {
+	uint8 u8i;
+	for (u8i=0 ;u8i<PBN_COUNT;u8i++)
+	{
+		DIO_u8SetPinDir(PBN[u8i],SWITCH_CON);
+	}
+
 
 }
 
-uint8 SW_u8AddPBN (uint8 u8NewPBN)
-{
-	uint8 u8i=0,u8Flag=0;
-	if (u8Count>=PBN_COUNT)
-	{
-		u8Flag =1;
-	}
-	for ( ;(u8i<u8Count) && (!u8Flag) ;u8i++)
-	{
-		if (PBN[u8i]==u8NewPBN)
-		{
-			u8Flag =1;
-		}
-	}
-	if (!u8Flag)
-	{
-		PBN[u8Count++]=u8NewPBN;
-		DIO_u8SetPinDir(u8NewPBN,INPUT_PULLUP);
-	}
-	return !u8Flag;
-}
 
 void SW_vidTask(void)
 {
 	static uint8 counter[PBN_COUNT] = {0},u8i=0;
 
-	if (u8i < u8Count)
+	if (u8i < PBN_COUNT)
 	{
 		switch (PBN_state[u8i])
 		{
 		case Released 	:
-			if (DIO_u8ReadPin(PBN[u8i])==LOW)
+			if (DIO_u8ReadPin(PBN[u8i])==SWITCH_PUSH)
 				PBN_state[u8i] = PrePushed;
 			break;
 		case PrePushed	:
-			if (DIO_u8ReadPin(PBN[u8i])==LOW)
+			if (DIO_u8ReadPin(PBN[u8i])==SWITCH_PUSH)
 				counter[u8i]++;
 			if (counter[u8i]>=SENS_COUNT)
 			{
 				counter[u8i]=0;
 				PBN_state[u8i] = Pushed;
+				*u8Ptr[u8i]=1;
 			}
 			break;
 		case Pushed		:
-			if (DIO_u8ReadPin(PBN[u8i])==HIGH)
+			if (DIO_u8ReadPin(PBN[u8i])==SWITCH_REL)
 				PBN_state[u8i] = PreReleased;
 			break;
 		case PreReleased:
-			if (DIO_u8ReadPin(PBN[u8i])==HIGH)
+			if (DIO_u8ReadPin(PBN[u8i])==SWITCH_REL)
 				counter[u8i]++;
 			if (counter[u8i]>=SENS_COUNT)
 			{
@@ -87,13 +92,5 @@ void SW_vidTask(void)
 
 uint8 SW_u8Read(uint8 u8PBN)
 {
-	uint8 u8i = 0,state=SWITCH_STATE_Error;
-	for( ;(u8i<u8Count)&&(state==SWITCH_STATE_Error);u8i++)
-	{
-		if (PBN[u8i]==u8PBN)
-		{
-			state =PBN_state[u8i];
-		}
-	}
-	return state;
+	return PBN_state[u8PBN];
 }

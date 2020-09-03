@@ -17,28 +17,28 @@
 
 #define TIMSK_R	 		(*((volatile uint8 *)(0x59)))
 
-#define TIMSK_OCIE2_S	(7)
-#define TIMSK_TOCIE2_S	(6)
-#define TIMSK_TICIE1_S	(5)
-#define TIMSK_OCIE1A_S	(4)
-#define TIMSK_OCIE1B_S	(3)
-#define TIMSK_TOIE1_S	(2)
-#define TIMSK_OCIE0_S	(1)
-#define TIMSK_TOIE0_S	(0)
+#define TIMSK_OCIE2		(7)
+#define TIMSK_TOCIE2	(6)
+#define TIMSK_TICIE1	(5)
+#define TIMSK_OCIE1A	(4)
+#define TIMSK_OCIE1B	(3)
+#define TIMSK_TOIE1		(2)
+#define TIMSK_OCIE0		(1)
+#define TIMSK_TOIE0		(0)
 
 
 
 
 #define TIFR_R			(*((volatile uint8 *)(0x58)))
 
-#define TIFR_OCF2_S		(7)
-#define TIFR_TOV2_S		(6)
-#define TIFR_ICF1_S		(5)
-#define TIFR_OCF1A_S	(4)
-#define TIFR_OCF1B_S	(3)
-#define TIFR_TOV1_S		(2)
-#define TIFR_OCF0_S		(1)
-#define TIFR_TOV0_S		(0)
+#define TIFR_OCF2		(7)
+#define TIFR_TOV2		(6)
+#define TIFR_ICF1		(5)
+#define TIFR_OCF1A		(4)
+#define TIFR_OCF1B		(3)
+#define TIFR_TOV1		(2)
+#define TIFR_OCF0		(1)
+#define TIFR_TOV0		(0)
 
 
 // TIMER 0 REGISTERS
@@ -46,18 +46,18 @@
 // TIMER/COUNTER CONTROL REGISTER TCCR0
 #define TCCR0_R	 		(*((volatile uint8 *)(0x53)))
 
-#define TCCR0_FOC0_S	(7)
-#define TCCR0_WGM00_S	(6)
-#define TCCR0_COM01_S	(5)
-#define TCCR0_COM00_S	(4)
-#define TCCR0_COM_S		(4)
-#define TCCR0_COM_M		(0x30)
-#define TCCR0_WGM01_S	(3)
-#define TCCR0_CS02_S	(2)
-#define TCCR0_CS01_S	(1)
-#define TCCR0_CS00_S	(0)
-#define TCCR0_CS_S		(0)
-#define TCCR0_CS_M		(0x07)
+#define TCCR0_FOC0	(7)
+#define TCCR0_WGM00	(6)
+#define TCCR0_COM01	(5)
+#define TCCR0_COM00	(4)
+#define TCCR0_COM_S	(4)
+#define TCCR0_COM_M	(0x30)
+#define TCCR0_WGM01	(3)
+#define TCCR0_CS02	(2)
+#define TCCR0_CS01	(1)
+#define TCCR0_CS00	(0)
+#define TCCR0_CS_S	(0)
+#define TCCR0_CS_M	(0x07)
 
 
 #define TCNT0_R	(*((volatile uint8 *)(0x52)))
